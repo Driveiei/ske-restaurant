@@ -1,0 +1,7 @@
+#Command for adding
+#put [button]:(Describe the button)
+e:Edit order
+p:Print menu
+s:Show order
+c:Review order and Checkout
+x:Cancel order
