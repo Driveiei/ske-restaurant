@@ -31,8 +31,8 @@ public class RestaurantManager {
 
 	/* load the text from menu.txt and insert it in names and prices */
 	private static void loadText() {
-		String filename = "Data/menu.txt";
-		ClassLoader loader = RestaurantManager.class.getClassLoader();
+		String filename = "data/menu.txt";
+		ClassLoader loader = RestaurantManager.class.getClassLoader(); 
 		InputStream in = loader.getResourceAsStream(filename);
 		if (in == null) {
 			System.out.println("Error reading file: " + filename);
@@ -116,8 +116,8 @@ public class RestaurantManager {
 	}
 
 	/*
-	 * Show all order and total that you already order it when you press [s]
-	 * button
+	 * Show all order and total that you 
+	 * already order it when you press [s] button
 	 */
 	private static void showOrder(int[] quantity) {
 		line();
@@ -135,7 +135,9 @@ public class RestaurantManager {
 		twoSpace();
 	}
 
-	/* Cancel all order when you press [x] button */
+	/* 
+	 * Cancel all order when you press [x] button 
+	 * */
 	private static void cancelOrder(int[] quantity) {
 		total = 0;
 		for (int l = 0; l < names.size(); l++) {
