@@ -1,0 +1,25 @@
+# compiler output and build directories
+*.class
+*.temp
+bin/
+build/
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+
+# Netbeans project files
+nbproject/
+nbdist/
+nb-configuration.xml
+
+# IntelliJ project files
+.idea/
+out/
+*.iml
+*.iws
+*.ipr
+
+# MacOS junk (if you use a Mac)
+.DS_Store
