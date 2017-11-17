@@ -3,5 +3,6 @@
 e:Edit order
 p:Print menu
 s:Show order
-c:Review order and Checkout
-x:Cancel order
+r:Review order and Checkout
+c:Cancel order
+x:Close Program

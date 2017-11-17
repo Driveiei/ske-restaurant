@@ -1,0 +1,33 @@
+# Record order when customer checkout in a platform like this
+---------------------------------------------------
+# Year/Month/Day  Hour:Minute
+# [menuNumber] menu - quantity | prices 
+# Total 
+# Receive
+# Change
+---------------------------------------------------
+
+---------------------------------------------------
+2017-11-17  22:43
+[1] Brown Sugar Meatloaf     - 5 ea , 900.00 Baht.
+Total = 900.00 Baht.
+Receive = 2000.00 Baht.
+Change = 1100.00 Baht.
+---------------------------------------------------
+
+---------------------------------------------------
+2017-11-17  23:02
+[6] Chocolate Pudding        - 1 ea , 65.25 Baht.
+Total = 65.25 Baht.
+Receive = 300.00 Baht.
+Change = 234.75 Baht.
+---------------------------------------------------
+
+---------------------------------------------------
+2017-11-17  23:02
+[7] Triple Berry Smoothie    - 8 ea , 360.00 Baht.
+Total = 360.00 Baht.
+Receive = 20000.00 Baht.
+Change = 19640.00 Baht.
+---------------------------------------------------
+

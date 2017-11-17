@@ -1,218 +1,159 @@
 package Cashier;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * The basic calculate program for restaurant manager.
+ * RestaurantManager is a class to get menulist,prices and command by reading
+ * and loading from menu.txt and command.txt file. Moreover, this class record
+ * the order from the customer to the record.txt file.
  * 
  * @author Kornphon Noiprasert
  */
 public class RestaurantManager {
-
-	static Scanner scan = new Scanner(System.in);
-	static ArrayList<String> names = new ArrayList<>();
+	static ArrayList<String> menuItems = new ArrayList<>();
 	static ArrayList<Double> prices = new ArrayList<>();
 	static ArrayList<String> check = new ArrayList<>();
 	static ArrayList<String> command = new ArrayList<>();
-	static double total = 0;
 
-	/* The box to make a frame */
-	private static void line() {
-		System.out.println("+--------------------------------+------------+-------------+");
+	/*
+	 * Change menuItems arraylist to array and return allMenu (array) to
+	 * SkeRestaurant class.
+	 */
+	public static String[] getMenuItems() {
+		String[] allMenu = menuItems.toArray(new String[menuItems.size()]);
+		return allMenu;
 	}
 
-	/* Auto two line spaces */
-	private static void twoSpace() {
-		System.out.println();
-		System.out.println();
+	/*
+	 * Change prices arraylist to array and return allPrices (array) to
+	 * SkeRestaurant class.
+	 */
+	public static double[] getPrices() {
+		double[] allPrices = new double[prices.size()];
+		for (int i = 0; i < prices.size(); i++) {
+			allPrices[i] = prices.get(i);
+		}
+		return allPrices;
 	}
 
-	/* load the text from menu.txt and insert it in names and prices */
-	private static void loadText() {
+	/*
+	 * Change command arraylist to array and return allCommand (array) to
+	 * SkeRestaurant class.
+	 */
+	public static String[] getCommands() {
+		String[] allCommand = command.toArray(new String[command.size()]);
+		return allCommand;
+	}
+
+	/*
+	 * find the location of file, read text in a file
+	 */
+	private static InputStream readTextMenu() {
 		String filename = "data/menu.txt";
-		ClassLoader loader = RestaurantManager.class.getClassLoader(); 
+		ClassLoader loader = RestaurantManager.class.getClassLoader();
 		InputStream in = loader.getResourceAsStream(filename);
 		if (in == null) {
-			System.out.println("Error reading file: " + filename);
-			return;
+			System.out.println("Error reading file from: " + filename);
+			return null;
 		}
-		Scanner console = new Scanner(in);
+		return in;
+	}
+
+	/*
+	 * get file from readTextMenu's method and get menu ,price from the text to
+	 * Arraylist and add all number of menu to check in Main class.
+	 */
+	public static void loadTextMenu() {
+		InputStream in = readTextMenu();
+		Scanner readText = new Scanner(in);
 		String[] seperate = new String[2];
-		while (console.hasNextLine()) {
-			String list = console.nextLine();
+		while (readText.hasNextLine()) {
+			String list = readText.nextLine();
+			if (list.startsWith("#")) {
+				continue;
+			}
+			menuItems.add(list.split(":")[0]);
+			prices.add(Double.parseDouble(list.split(":")[1]));
+		}
+		String addCondition;
+		for (int i = 0; i < menuItems.size(); i++) {
+			addCondition = Integer.toString(i + 1);
+			check.add(addCondition);
+		}
+		readText.close();
+	}
+
+	/*
+	 * find the location of file, read text in a file
+	 */
+	private static InputStream readTextCommand() {
+		String filename = "data/command.txt";
+		ClassLoader loader = RestaurantManager.class.getClassLoader();
+		InputStream in = loader.getResourceAsStream(filename);
+		if (in == null) {
+			System.out.println("Error reading file from: " + filename);
+			return null;
+		}
+		return in;
+	}
+
+	/*
+	 * get file from readTextMenuCommand's method and get command from the text
+	 * to Arraylist and add all command to check in Main class.
+	 */
+	public static void loadTextCommand() {
+		InputStream in = readTextCommand();
+		Scanner readText = new Scanner(in);
+		String[] seperate = new String[2];
+		while (readText.hasNextLine()) {
+			String list = readText.nextLine();
 			if (list.startsWith("#")) {
 				continue;
 			}
 			seperate = list.split(":");
-			names.add(seperate[0]);
-			prices.add(Double.parseDouble(seperate[1]));
+			check.add(seperate[0]);
+			command.add("[" + seperate[0] + "] - " + seperate[1]);
 		}
-		console.close();
+		readText.close();
 	}
 
-	/* put the condition from menu.txt and command.txt */
-	private static void solCondition() {// use one time (for check condition)
-		String addCondition;
-		loadText();
-		for (int i = 0; i < names.size(); i++) {
-			addCondition = Integer.toString(i + 1);
-			check.add(addCondition);
-		}
-		command = SkeRestaurant.loadTextTwo();
-		for (int j = 0; j < command.size(); j++) {
-			check.add(command.get(j));
-		}
-	}
-
-	/* Show Menu order when you press [p] button */
-	private static void showMenu() {
-		SkeRestaurant.orderMenu();
-		SkeRestaurant.commandMenu();
-		System.out.println();
-	}
-
-	/* Input choice */
-	private static String putChoice(String choice) {
-		System.out.print("Enter your choice : ");
-		choice = scan.next();
-		choice = errorInput(choice);
-		return choice;
-	}
-
-	/* Check the choice that you input */
-	private static String errorInput(String choice) {
-		while (check.indexOf(choice) == -1) {
-			System.out.println("Error input. Please try again.");
-			choice = putChoice(choice);
-		}
-		return choice;
-	}
-
-	/* add total price of your new menu order */
-	private static double totalPricesPlus(double total, int quan, String choice) {
-		total = total + quan * prices.get(Integer.parseInt(choice) - 1);
-		return total;
-	}
-
-	/* minus total price of order that you edit */
-	private static double totalPricesMinus(double total, int quan, String choice) {
-		total = total - quan * prices.get(Integer.parseInt(choice) - 1);
-		return total;
-	}
-
-	/* Input quantity */
-	private static int putQuan() {
-		System.out.print("Enter your quantity : ");
-		int quan = scan.nextInt();
-		return quan;
-	}
-
-	/* Change words to number */
-	private static int changeToInt(String word) {
-		int num = Integer.parseInt(word);
-		return num;
-	}
-
-	/*
-	 * Show all order and total that you 
-	 * already order it when you press [s] button
+	/**
+	 * Record the order when customer checkout into a file(record.txt).
+	 * 
+	 * @param total is the price that customer must paid
+	 * for their order.
+	 * @param menuData is list of menu that customer order. 
+	 * (include menuNumber , menu , quantity and price of menu)
+	 * @param money is the value that customer paid to checkout.
+	 * @param change is the change that customer 
+	 * receives money back from the manager.
+	 * @param time is the time that customer checkout
+	 * (include year-month-day and hour-minute).
 	 */
-	private static void showOrder(int[] quantity) {
-		line();
-		System.out.printf("|\t\tMenu\t\t |  %8s  |   %6s    |\n", "Quantity", "Prices");
-		line();
-		for (int i = 0; i < names.size(); i++) {
-			if (quantity[i] != 0) {
-				System.out.printf("| [%d] %-26s | %10d | %11.2f |\n", i + 1, names.get(i), quantity[i],
-						quantity[i] * prices.get(i));
-			}
+	public static void recordOrder(double total, String menuData, double money, double change, String time) {
+		String outputfile = "src/data/record.txt";
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream(outputfile, true);
+		} catch (FileNotFoundException ex) {
+			System.out.println("Couldn't open output file " + outputfile);
+			return;
 		}
-		line();
-		System.out.printf("| %-31s| %24.2f |\n", "Total", total);
-		line();
-		twoSpace();
-	}
-
-	/* 
-	 * Cancel all order when you press [x] button 
-	 * */
-	private static void cancelOrder(int[] quantity) {
-		total = 0;
-		for (int l = 0; l < names.size(); l++) {
-			quantity[l] = 0;
-		}
-		System.out.println("The Order are Cancel.");
-		twoSpace();
-	}
-
-	/*
-	 * Edit order that you want when you press [e] button It will minus from
-	 * your orders that you choose it
-	 */
-	private static int[] editOrder(String choice, int quan, int num, int[] quantity) {
-		System.out.print("Enter your edit choice : ");
-		choice = scan.next();
-		quan = putQuan();
-		num = changeToInt(choice);
-		quantity[num - 1] = quantity[num - 1] - quan;
-		if (quantity[num - 1] <= 0) {
-			quantity[num - 1] = quantity[num - 1] + quan;
-			total = totalPricesMinus(total, quantity[num - 1], choice);
-			quantity[num - 1] = 0;
-			System.out.printf("[%d] %s is 0 piece by now.", num, names.get(num - 1));
-		} else {
-			System.out.printf("[%d] %s are minus %d pieces by now.", num, names.get(num - 1), quan);
-			total = totalPricesMinus(total, quan, choice);
-		}
-		twoSpace();
-		return quantity;
-	}
-
-	/* add the order when your choice is [number] button */
-	private static int[] addOrder(int quan, int num, String choice, int[] quantity) {
-		quan = putQuan();
-		num = changeToInt(choice);
-		quantity[num - 1] = quantity[num - 1] + quan;
-		System.out.printf("[%d] %s are add %d pieces by now.", num, names.get(num - 1), quan);
-		total = totalPricesPlus(total, quan, choice);
-		twoSpace();
-		return quantity;
-	}
-
-	/* This method spread the command what you want */
-	private static void spreadSpace() {
-		int quan = 0;
-		int num = 0;
-		String choice = "";
-		int[] quantity = new int[names.size()];
-		choice = putChoice(choice);
-		while (!choice.equalsIgnoreCase("c")) {
-			if (choice.equalsIgnoreCase("p")) {
-				showMenu();
-			} else if (choice.equalsIgnoreCase("x")) {
-				cancelOrder(quantity);
-			} else if (choice.equalsIgnoreCase("c")) {
-				break;
-			} else if (choice.equalsIgnoreCase("e")) {
-				editOrder(choice, quan, num, quantity);
-			} else if (choice.equalsIgnoreCase("s")) {
-				showOrder(quantity);
-			} else {
-				addOrder(quan, num, choice, quantity);
-			}
-			choice = putChoice(choice);
-		}
-		showOrder(quantity); // Show total when press [c] button
-	}
-
-	public static void main(String[] args) {
-		solCondition();
-		showMenu();
-		twoSpace();
-		spreadSpace();
-		System.out.println("Thank you");
+		PrintStream printOut = new PrintStream(out);
+		printOut.printf("---------------------------------------------------\n");
+		printOut.printf("%s\n", time);
+		printOut.printf("%s", menuData);
+		printOut.printf("Total = %.2f Baht.\n", total);
+		printOut.printf("Receive = %.2f Baht.\n", money);
+		printOut.printf("Change = %.2f Baht.\n", change);
+		printOut.printf("---------------------------------------------------\n\n");
+		printOut.close();
 	}
 
 }

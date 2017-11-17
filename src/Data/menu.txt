@@ -1,11 +1,11 @@
 #+------------ WELCOME TO SKE RESTAURANT ------------+
 #add menu at this text below
 #menu:price(follow with .00)
-Brown Sugar Meatloaf:180.00
-Roasted Vegetables:120.00
-Baked Honey Chicken:150.00
-Banoffee Pie:80.00
-Tiramisu:100.00
-Chocolate Pudding:65.00
-Triple Berry Smoothie:45.00
-Fruit Punch:30.00
+Brown Sugar Meatloaf : 180.00
+Roasted Vegetables : 120.00
+Baked Honey Chicken : 150.75
+Banoffee Pie : 80.50
+Tiramisu : 100.00
+Chocolate Pudding : 65.25
+Triple Berry Smoothie : 45.00
+Fruit Punch : 30.00
